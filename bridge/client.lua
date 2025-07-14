@@ -91,3 +91,58 @@ RegisterNetEvent('sanitation:client:setFuel', function(netId, plate)
         exports['ps-fuel']:SetFuel(entity, 100.0)
     end
 end)
+
+local blips = {}
+
+local function removeBlip(self)
+	if not self or not self.blipId then return end
+	if DoesBlipExist(self.blipId) then RemoveBlip(self.blipId) end
+	blips[self.id] = nil
+end
+
+function CreateCoordBlip(props)
+    local _type = type(props)
+    if _type ~= "table" then error(("expected type 'table' for the first argument, received (%s)"):format(_type)) end
+    local id = #blips + 1
+    local self = {} 
+    local blip = AddBlipForCoord(props.coords.x + 0.0, props.coords.y + 0.0, props.coords.z + 0.0)
+    if props.sprite then
+        SetBlipSprite(blip, props.sprite or 1)
+    end
+    SetBlipScale(blip, props.scale or 0.6)
+    SetBlipColour(blip, props.color or 0)
+    SetBlipDisplay(blip, 2)
+    SetBlipAsShortRange(blip, true)
+    if props.name then
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentString(props.name)
+        EndTextCommandSetBlipName(blip)
+    end
+    if props.distance then
+        self.distance = props.distance
+    end
+    self.id = id
+    self.blipId = blip
+    self.remove = function()
+		removeBlip(self)
+	end
+    blips[id] = self
+    return self
+end
+
+function CreateRadiusBlip(props)
+    local _type = type(props)
+    if _type ~= "table" then error(("expected type 'table' for the first argument, received (%s)"):format(_type)) end
+    local id = #blips + 1
+    local self = {} 
+    local blip = AddBlipForRadius(props.coords.x + 0.0, props.coords.y + 0.0, props.coords.z + 0.0, props.radius)
+    SetBlipColour(blip, props.color or 0)
+    SetBlipAlpha(blip, props.alpha or 250)
+    self.id = id
+    self.blipId = blip
+    self.remove = function()
+		removeBlip(self)
+	end
+    blips[id] = self
+    return self
+end
