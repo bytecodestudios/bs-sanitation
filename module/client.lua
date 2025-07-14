@@ -96,7 +96,7 @@ RegisterNetEvent('sanitation:client:toggleJob', function(job)
     if job?.status then
         local repeating = jobData.inzone
         jobData.status = job.status
-        jobData.blip = lib.blip.radius(job.zone)
+        jobData.blip = CreateRadiusBlip(job.zone)
         jobData.zone = job.zone
         jobData.inzone = job.inZone
         jobData.trashes = job.trashes
@@ -126,7 +126,7 @@ end)
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
     for name in pairs(ConfigParty.jobZones) do
-        lib.ped.remove('sanitation_' .. name)
+       exports['cad-pedspawner']:DeletePed('sanitation_' .. name)
     end
     if pickedTrash and DoesEntityExist(pickedTrash) then
         DeleteEntity(pickedTrash)
@@ -141,7 +141,7 @@ end)
 
 CreateThread(function()
     for name, data in pairs(ConfigParty.jobZones) do
-        lib.ped.add('sanitation_' .. name, {
+        exports['cad-pedspawner']:AddPed('sanitation_' .. name, {
             model = data.model,
             coords = data.coords,
             type = data.type,
@@ -201,7 +201,7 @@ CreateThread(function()
         })
     end
     for _, data in pairs(ConfigParty.jobBlips) do
-        lib.blip.coords({
+        CreateCoordBlip({
             name = data.name,
             coords = data.coords,
             sprite = data.sprite,
