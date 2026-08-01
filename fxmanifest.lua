@@ -4,7 +4,7 @@ lua54 'yes'
 
 author 'Cadburry (Bytecode Studios)'
 description 'Sanition Job with Snappy Phone Party System'
-version '1.0'
+version '1.1'
 
 shared_scripts {
     '@ox_lib/init.lua',
