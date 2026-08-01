@@ -1,6 +1,6 @@
 local ConfigJob = lib.table.deepclone(Config.Job)
 local ConfigParty = lib.table.deepclone(Config.Party)
-local pgroup = exports['snappy-phone']
+local pgroup = GetResourceState('cad-groupsystem') == 'started' and exports['cad-groupsystem'] or exports['snappy-phone']
 
 local partyData = {}
 local partyTasks = {}
